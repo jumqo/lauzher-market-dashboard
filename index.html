@@ -259,7 +259,7 @@ function render(){
   const dd=(r,fld,v)=>`<select class="inp" style="width:90px;padding:.3rem .5rem" data-k="${esc(K(r))}" onchange="setV(this.dataset.k,'${fld}',this.value)"><option value="" disabled hidden ${v?'':'selected'}>—</option><option ${v==='SI'?'selected':''}>SI</option><option ${v==='NO'?'selected':''}>NO</option></select>`;
   const head=isRes?['RUC - DNI','NOMBRE','DEPARTAMENTO','PROVINCIA','DISTRITO','EJECUTIVO','CONTACTADO','VENTAS']:['RUC - DNI','NOMBRE','CONTACTO','DEPARTAMENTO','PROVINCIA','DISTRITO','EJECUTIVO','CONTACTADO','VENTAS'];
   const body=rs.map(r=>{const v=val(r),ed=own&&editing;
-    return `<tr class="hover:bg-white/5"><td>${esc(r.ruc)}</td><td class="text-[#EEEEEE]">${esc(r.n)}</td>${isRes?'':`<td>${esc(r.ct || '—')}</td>`}<td>${esc(r.dep)}</td><td>${esc(r.prov)}</td><td>${esc(r.dist)}</td><td>${esc(r.ej)}</td><td>${ed?dd(r,'c',v.c):badge(v.c)}</td><td>${ed?dd(r,'v',v.v):badge(v.v)}</td></tr>`}).join('');
+    return `<tr class="hover:bg-white/5"><td>${esc(r.ruc)}</td><td class="text-[#EEEEEE]">${esc(r.n)}</td>${isRes?'':`<td>${esc(r.ct||'—')}</td>`}<td>${esc(r.dep)}</td><td>${esc(r.prov)}</td><td>${esc(r.dist)}</td><td>${esc(r.ej)}</td><td>${ed?dd(r,'c',v.c):badge(v.c)}</td><td>${ed?dd(r,'v',v.v):badge(v.v)}</td></tr>`}).join('');
   const ctrl=own?`<div class="flex gap-2">${editing?`<button class="btn" style="background:#6B7280" onclick="cancel()">Cancelar</button>`:`<button class="btn" style="background:linear-gradient(90deg,#7C3AED,#2563EB)" onclick="edit()"><i class="fa-solid fa-pen mr-1"></i>EDITAR</button>`}<button class="btn" style="background:#0891B2" ${editing?'':'disabled'} onclick="saveAll()"><i class="fa-solid fa-floppy-disk mr-1"></i>GUARDAR</button></div>`:'';
   $('#panel').innerHTML=`
    <section class="card p-4 mb-5"><div class="grid grid-cols-2 md:grid-cols-${isRes?5:4} gap-3">${isRes?sel('ej','EJECUTIVO'):''}${sel('dep','DEPARTAMENTO')}${sel('prov','PROVINCIA')}${sel('dist','DISTRITO')}${sel('ruc','RUC - DNI')}</div></section>
@@ -272,20 +272,12 @@ function render(){
      ${total?`<div id="tableWrap" class="overflow-auto rounded-xl" style="max-height:480px"><table><thead><tr>${head.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${body}</tbody></table></div>`:'<p class="text-center text-sm py-8">Sin resultados para los filtros seleccionados.</p>'}</section>`;
   const estados=['NO CONTACTADO','CONTACTADO','INTERESADO','COTIZACION','GANADO','PERDIDO'];
   const estadoVals=estados.map(e=>rs.filter(r=>(val(r).estado||'NO CONTACTADO')===e).length);
-  bar('c1',
-    estados.map((e,i)=>`${e} (${estadoVals[i]})`),
-    estadoVals,
-    ['#22D3EE','#3B82F6','#A855F7','#F59E0B','#10B981','#F43F5E']
-  );
+  bar('c1',estados.map((e,i)=>`${e} (${estadoVals[i]})`),estadoVals,['#22D3EE','#3B82F6','#A855F7','#F59E0B','#10B981','#F43F5E']);
 
   if(isRes){
     const ejecutivos=[...new Set(rs.map(r=>r.ej))].filter(Boolean);
     const vals=ejecutivos.map(e=>rs.filter(r=>r.ej===e).length);
-    bar('c2',
-      ejecutivos.map((e,i)=>`${e} (${vals[i]})`),
-      vals,
-      ['#7C3AED','#06B6D4','#A855F7']
-    );
+    bar('c2',ejecutivos.map((e,i)=>`${e} (${vals[i]})`),vals,['#7C3AED','#06B6D4','#A855F7']);
   }
   const tw=$('#tableWrap');if(tw)tw.scrollTop=sc0;
 }
