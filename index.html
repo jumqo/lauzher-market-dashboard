@@ -296,9 +296,15 @@ function render(){
    <section class="card p-4 mb-5"><div class="grid grid-cols-2 md:grid-cols-${isRes?5:4} gap-3">${isRes?sel('ej','EJECUTIVO'):''}${sel('dep','DEPARTAMENTO')}${sel('prov','PROVINCIA')}${sel('dist','DISTRITO')}${sel('ruc','RUC - DNI')}</div></section>
    <section class="grid grid-cols-1 md:grid-cols-${isRes?3:2} gap-4 mb-5">${kpis}</section>
    <section class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-5">
-     <div class="card p-5"><h3 class="t text-sm mb-3">DISTRIBUCIÓN POR ESTADO</h3><div style="height:200px"><canvas id="c1"></canvas></div></div>
-     <div class="card p-5"><h3 class="t text-sm mb-3">${me.role==="admin"?"CARTERA POR EJECUTIVO":"TOP PROVINCIAS"}</h3><div style="height:200px"><canvas id="c2"></canvas></div></div>
-   </section>
+  <div class="card p-5 ${isRes?'':'lg:col-span-2'}">
+    <h3 class="t text-sm mb-3">DISTRIBUCIÓN POR ESTADO</h3>
+    <div style="height:200px"><canvas id="c1"></canvas></div>
+  </div>
+  ${isRes?`<div class="card p-5">
+    <h3 class="t text-sm mb-3">CARTERA POR EJECUTIVO</h3>
+    <div style="height:200px"><canvas id="c2"></canvas></div>
+  </div>`:''}
+</section>
    <section class="card p-5"><div class="flex flex-wrap items-center justify-between gap-3 mb-3"><h3 class="t text-sm">Detalle de clientes <span class="font-normal text-xs">(${total})</span></h3>${ctrl}</div>
      ${total?`<div id="tableWrap" class="overflow-auto rounded-xl" style="max-height:480px"><table><thead><tr>${head.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${body}</tbody></table></div>`:'<p class="text-center text-sm py-8">Sin resultados para los filtros seleccionados.</p>'}</section>`;
   const estados=['NO CONTACTADO','CONTACTADO','INTERESADO','COTIZACION','GANADO','PERDIDO'];
