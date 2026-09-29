@@ -79,6 +79,32 @@ const supabaseClient = supabase.createClient(
 );
 
 
+async function cargarDatosSupabase(){
+  const {data,error}=await supabaseClient
+    .from('dashboard_clientes_detalle')
+    .select('*');
+
+  if(error){
+    console.error('ERROR SUPABASE CARGA:',error);
+    return;
+  }
+
+  DATA=(data||[]).map(r=>({
+    ruc:r.ruc_dni,
+    n:r.nombre_principal,
+    ct:r.contacto||'',
+    dep:r.departamento,
+    prov:r.provincia,
+    dist:r.distrito,
+    ej:(r.ejecutivo||'').toUpperCase(),
+    estado:r.estado||'NO CONTACTADO',
+    c:(r.estado && r.estado!=='NO CONTACTADO')?'SI':'NO',
+    v:(r.estado==='GANADO')?'SI':'NO'
+  }));
+
+  console.log('CLIENTES SUPABASE:',DATA.length);
+}
+
 async function probarDatosSupabase(){
 
   const {data,error}=await supabaseClient
@@ -144,7 +170,7 @@ if(perfilError || !perfil){
   me={
     id:perfil.id,
     u:email,
-    role:perfil.rol,
+    role:perfil.rol.toLowerCase(),
     nombre:perfil.nombre
   };
 
