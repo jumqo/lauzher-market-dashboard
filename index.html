@@ -296,13 +296,28 @@ function render(){
    <section class="card p-4 mb-5"><div class="grid grid-cols-2 md:grid-cols-${isRes?5:4} gap-3">${isRes?sel('ej','EJECUTIVO'):''}${sel('dep','DEPARTAMENTO')}${sel('prov','PROVINCIA')}${sel('dist','DISTRITO')}${sel('ruc','RUC - DNI')}</div></section>
    <section class="grid grid-cols-1 md:grid-cols-${isRes?3:2} gap-4 mb-5">${kpis}</section>
    <section class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-5">
-     <div class="card p-5"><h3 class="t text-sm mb-3">CONTACTADO VS NO CONTACTADO</h3><div style="height:200px"><canvas id="c1"></canvas></div></div>
-     <div class="card p-5"><h3 class="t text-sm mb-3">VENTAS VS NO VENTAS</h3><div style="height:200px"><canvas id="c2"></canvas></div></div>
+     <div class="card p-5"><h3 class="t text-sm mb-3">DISTRIBUCIÓN POR ESTADO</h3><div style="height:200px"><canvas id="c1"></canvas></div></div>
+     <div class="card p-5"><h3 class="t text-sm mb-3">CARTERA POR EJECUTIVO</h3><div style="height:200px"><canvas id="c2"></canvas></div></div>
    </section>
    <section class="card p-5"><div class="flex flex-wrap items-center justify-between gap-3 mb-3"><h3 class="t text-sm">Detalle de clientes <span class="font-normal text-xs">(${total})</span></h3>${ctrl}</div>
      ${total?`<div id="tableWrap" class="overflow-auto rounded-xl" style="max-height:480px"><table><thead><tr>${head.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${body}</tbody></table></div>`:'<p class="text-center text-sm py-8">Sin resultados para los filtros seleccionados.</p>'}</section>`;
-  bar('c1',[`CONTACTADO (${cont})`,`NO CONTACTADO (${total-cont})`],[cont,total-cont],['#22D3EE','#7C3AED']);
-  bar('c2',[`VENTAS (${ven})`,`NO VENTAS (${total-ven})`],[ven,total-ven],['#3B82F6','#A855F7']);
+  const estados=['NO CONTACTADO','CONTACTADO','INTERESADO','COTIZACION','GANADO','PERDIDO'];
+  const estadoVals=estados.map(e=>rs.filter(r=>(val(r).estado||'NO CONTACTADO')===e).length);
+
+  bar('c1',
+    estados.map(e=>`${e} (${estadoVals[estados.indexOf(e)]})`),
+    estadoVals,
+    ['#22D3EE','#3B82F6','#A855F7','#F59E0B','#10B981','#F43F5E']
+  );
+
+  const ejecutivos=[...new Set(rs.map(r=>r.ej))].filter(Boolean);
+  const ejecutivoVals=ejecutivos.map(e=>rs.filter(r=>r.ej===e).length);
+
+  bar('c2',
+    ejecutivos.map(e=>`${e} (${rs.filter(r=>r.ej===e).length})`),
+    ejecutivoVals,
+    ['#7C3AED','#06B6D4','#A855F7']
+  );
   const tw=$('#tableWrap');if(tw)tw.scrollTop=sc0;
 }
 </script>
