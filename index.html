@@ -194,7 +194,7 @@ async function start(){
   if(me.role==='admin')$('#upl').classList.remove('hidden');
   await load();
 
-probarDatosSupabase();
+await cargarDatosSupabase();
 
 render();
   if(CONFIG.DB_URL)setInterval(async()=>{if(editing)return;const p=JSON.stringify(STATE);await load();if(JSON.stringify(STATE)!==p)render()},CONFIG.POLL);
