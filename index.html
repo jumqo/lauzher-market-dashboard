@@ -256,7 +256,7 @@ function render(){
     $('#panel').innerHTML=`<div class="card p-12 text-center"><i class="fa-solid fa-database text-4xl mb-4" style="color:#8B5CF6"></i><h2 class="t text-lg">Aún no hay datos cargados</h2><p class="text-sm mt-2">${me.role==='admin'?'Usa el botón "Cargar CSV" para importar la base de clientes.':'Solicita al administrador que cargue la base de clientes.'}</p></div>`;return;
   }
   const isRes=view==='resumen',own=!isRes&&me.role===view,f=F[view]||(F[view]={});
-  const base=DATA.filter(r=>isRes||r.ej===view);
+  const base=me.role==='admin'?DATA:DATA.filter(r=>r.ej===me.nombre.toUpperCase());
   const sc=skip=>base.filter(r=>ORDER.every(k=>k===skip||!f[k]||r[k]===f[k]));
   const sel=(k,label)=>{const o=[...new Set(sc(k).map(r=>r[k]))].sort((a,b)=>a.localeCompare(b,'es'));
     return `<div><label class="text-xs">${label}</label><select class="inp mt-1" onchange="setF('${k}',this.value)"><option value="">Todos (${o.length})</option>${o.map(x=>`<option value="${esc(x)}" ${f[k]===x?'selected':''}>${esc(x)}</option>`).join('')}</select></div>`};
