@@ -272,12 +272,21 @@ function render(){
      ${total?`<div id="tableWrap" class="overflow-auto rounded-xl" style="max-height:480px"><table><thead><tr>${head.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${body}</tbody></table></div>`:'<p class="text-center text-sm py-8">Sin resultados para los filtros seleccionados.</p>'}</section>`;
   const estados=['NO CONTACTADO','CONTACTADO','INTERESADO','COTIZACION','GANADO','PERDIDO'];
   const estadoVals=estados.map(e=>rs.filter(r=>(val(r).estado||'NO CONTACTADO')===e).length);
-  bar('c1',estados.map((e,i)=>`${e} (${estadoVals[i]})`),estadoVals,['#22D3EE','#3B82F6','#A855F7','#F59E0B','#10B981','#F43F5E']);
+
+  bar('c1',
+    estados.map((e,i)=>`${e} (${estadoVals[i]})`),
+    estadoVals,
+    ['#22D3EE','#3B82F6','#A855F7','#F59E0B','#10B981','#F43F5E']
+  );
 
   if(isRes){
     const ejecutivos=[...new Set(rs.map(r=>r.ej))].filter(Boolean);
     const vals=ejecutivos.map(e=>rs.filter(r=>r.ej===e).length);
-    bar('c2',ejecutivos.map((e,i)=>`${e} (${vals[i]})`),vals,['#7C3AED','#06B6D4','#A855F7']);
+    bar('c2',
+      ejecutivos.map((e,i)=>`${e} (${vals[i]})`),
+      vals,
+      ['#7C3AED','#06B6D4','#A855F7']
+    );
   }
   const tw=$('#tableWrap');if(tw)tw.scrollTop=sc0;
 }
