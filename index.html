@@ -276,11 +276,16 @@ function render(){
     return `<div><label class="text-xs">${label}</label><select class="inp mt-1" onchange="setF('${k}',this.value)"><option value="">Todos (${o.length})</option>${o.map(x=>`<option value="${esc(x)}" ${f[k]===x?'selected':''}>${esc(x)}</option>`).join('')}</select></div>`};
   const rs=sc();
   const val=r=>({...(STATE[K(r)]||{}),...(draft[K(r)]||{})});
-  const total=rs.length,cont=rs.filter(r=>val(r).c==='SI').length,ven=rs.filter(r=>val(r).v==='SI').length;
-  const meta=Math.ceil(total*CONFIG.META),avance=meta?Math.min(ven/meta*100,999):0,tasa=total?ven/total*100:0;
+  const total=rs.length;
+  const cont=rs.filter(r=>val(r).c==='SI').length;
+  const ven=rs.filter(r=>val(r).v==='SI').length;
+  const gestion=cont;
+  const meta=Math.ceil(total*CONFIG.META);
   const card=(ic,col,title,num,sub,extra='')=>`<div class="card p-5"><div class="flex items-center justify-between"><span class="text-xs font-semibold tracking-wide">${title}</span><i class="fa-solid ${ic}" style="color:${col}"></i></div><div class="t text-4xl mt-2">${num}</div><p class="text-xs mt-1">${sub}</p>${extra}</div>`;
-  const kpis=card('fa-phone-volume','#22D3EE','CLIENTES CONTACTADOS',cont,`de ${total} clientes`)+card('fa-cart-shopping','#A78BFA','VENTAS',ven,`clientes que compraron · ${tasa.toFixed(1)}% del total`)+
-    (isRes?card('fa-bullseye','#60A5FA','AVANCE DEL PLAN',avance.toFixed(1)+'%',`${ven} de ${meta} ventas mínimas (${Math.round(CONFIG.META*100)}% de ${total})`,`<div class="mt-3 h-2 rounded-full" style="background:#ffffff14"><div class="h-2 rounded-full" style="width:${Math.min(avance,100)}%;background:linear-gradient(90deg,#7C3AED,#06B6D4)"></div></div>`):'');
+  const kpis=
+    card('fa-users','#22D3EE','TOTAL CLIENTES',total,`clientes asignados`)+
+    card('fa-headset','#A78BFA','EN GESTIÓN',gestion,`clientes trabajados`)+
+    (isRes?card('fa-trophy','#60A5FA','GANADOS',ven,`clientes ganados`):'');
   const badge=v=>v==='SI'?'<span class="b si">SI</span>':v==='NO'?'<span class="b no">NO</span>':'<span class="b pe">—</span>';
   const dd=(r,fld,v)=>`<select class="inp" style="width:90px;padding:.3rem .5rem" data-k="${esc(K(r))}" onchange="setV(this.dataset.k,'${fld}',this.value)"><option value="" disabled hidden ${v?'':'selected'}>—</option><option ${v==='SI'?'selected':''}>SI</option><option ${v==='NO'?'selected':''}>NO</option></select>`;
   const head=isRes?['RUC - DNI','NOMBRE','DEPARTAMENTO','PROVINCIA','DISTRITO','EJECUTIVO','CONTACTADO','VENTAS']:['RUC - DNI','NOMBRE','CONTACTO','DEPARTAMENTO','PROVINCIA','DISTRITO','EJECUTIVO','CONTACTADO','VENTAS'];
