@@ -110,18 +110,23 @@ if(error){
 
   const user=data.user;
 
-  const {data:perfil,error:perfilError}=await supabaseClient
-    .from('perfiles_usuarios')
-    .select('*')
-    .eq('auth_id',user.id)
-    .single();
+const {data:perfil,error:perfilError}=await supabaseClient
+.from('perfiles_usuarios')
+.select('*')
+.eq('auth_id',user.id)
+.single();
 
-  if(perfilError || !perfil){
+if(perfilError || !perfil){
     const e=$('#le');
-    e.textContent='Usuario autenticado pero sin perfil configurado';
+    e.textContent = perfilError 
+      ? perfilError.message 
+      : 'No existe perfil';
     e.classList.remove('hidden');
+
+    console.error('ERROR PERFIL:', perfilError);
+    console.log('USER ID:', user.id);
     return;
-  }
+}
 
   me={
     id:perfil.id,
