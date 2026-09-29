@@ -100,12 +100,13 @@ async function doLogin(){
     password
   });
 
-  if(error){
+if(error){
     const e=$('#le');
-    e.textContent='Usuario o contraseña incorrectos';
+    e.textContent=error.message;
     e.classList.remove('hidden');
+    console.error(error);
     return;
-  }
+}
 
   const user=data.user;
 
