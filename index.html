@@ -176,7 +176,11 @@ async function start(){
   $('#sub').textContent=(me.role==='admin'?'Administrador':'Ejecutivo '+me.role)+' · Meta: '+Math.round(CONFIG.META*100)+'% de ventas sobre el total de clientes';
   $('#sync').innerHTML=CONFIG.DB_URL?'<i class="fa-solid fa-cloud mr-1" style="color:#22D3EE"></i>Sincronizado en la nube':'<i class="fa-solid fa-laptop mr-1" style="color:#FBBF24"></i>Modo local';
   if(me.role==='admin')$('#upl').classList.remove('hidden');
-  await load();render();
+  await load();
+
+probarDatosSupabase();
+
+render();
   if(CONFIG.DB_URL)setInterval(async()=>{if(editing)return;const p=JSON.stringify(STATE);await load();if(JSON.stringify(STATE)!==p)render()},CONFIG.POLL);
 }
 (async()=>{
